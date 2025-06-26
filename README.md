@@ -1,7 +1,7 @@
 # RASMI LCA sampler
 This repository contains a compact, object-oriented, easy to use monte carlo sampler for connecting the RASMI building use material dataset with LCA factors.
 
-![Alt text](data/rming.JPG)
+![Alt text](/data/rmimg.JPG)
 
 ### RASMI
 RASMI is a global dataset of building material intensities. The dataset can be used for material flow and emission applications. More information on RASMI can be found in Fishman et al. (2024) at the following [link](https://doi.org/10.1038/s41597-024-03190-7)
