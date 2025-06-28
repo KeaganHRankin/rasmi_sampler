@@ -24,7 +24,7 @@ class RasmiLCA:
 
         # set datasets
         self.rasmi = self.import_rasmi()
-        self.efacs = self.import_efacs()
+        self.efacs = self.import_lcafacs()
 
         # set sampling parameters
         self.n = 10000
@@ -52,10 +52,10 @@ class RasmiLCA:
 
         return ras
     
-    def import_efacs(self):
-        """returns emission factors as a dictionary containing a dataframe for each material."""
+    def import_lcafacs(self):
+        """returns lca/emission factors as a dictionary containing a dataframe for each material."""
 
-        print('importing Ecoinvent factor dataset...')
+        print('importing lca factor dataset...')
         mats = ['concrete','brick','wood','steel','glass','plastics','aluminum','copper']
         facs = {}
         for m in mats:
@@ -79,11 +79,11 @@ class RasmiLCA:
 
         return rasmi_q
 
-    def query_efacs(self, geo):
+    def query_lcafacs(self, geo):
         """
-        Queries emission factors for each material to get specific country code from RASMI requested.
+        Queries lca/emission factors for each material to get specific country code from RASMI requested.
         c_code = desired country code
-        output = dictionary of emission factors for each mateal.
+        output = dictionary of lca/emission factors for each material.
         """
         efacs_c = self.efacs.copy()
         mats = ['concrete','brick','wood','steel','glass','plastics','aluminum','copper']
@@ -118,7 +118,7 @@ class RasmiLCA:
         """
         samples emission factor values
         efacs_q = queried emission factor dataset
-        xps_prod = 0 uses CO2 blowing, 1 uses HFC blowing
+        xps_prod = 0 uses CO2 blowing, 1 uses HFC blowing (for plastics with Ecoinvent dataset)
         n = number of samples
         seed = common random numbers seed
         """
@@ -140,11 +140,11 @@ class RasmiLCA:
     
     def sample_and_calc(self, function_, structure, geo):
         """
-        Given function, structure, geo, sample and calculate emissions per m2.
+        Given function, structure, geo, sample and calculate impact (emissions) per m2.
         """
         # get samples
         rasmi_s = self.sample_rasmi(self.query_rasmi(function_, structure, geo))
-        efacs_s = self.sample_efacs(self.query_efacs(geo))
+        efacs_s = self.sample_efacs(self.query_lcafacs(geo))
         
         # return diagonal einstein summation
         return np.einsum('ij,ji->i', rasmi_s, efacs_s.T)
